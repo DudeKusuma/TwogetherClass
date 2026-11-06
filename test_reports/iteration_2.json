@@ -1,0 +1,25 @@
+{
+  "summary": "Targeted frontend retest (Vue SPA, no backend) of subject card redesign, subject detail modal, Admin Power landing, Jadwal Besok CRUD, Deskripsi Mapel, student view and regressions. Playwright with clock mocked to Mon 2026-06-15 10:20. All requested features pass.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home subject cards at 390px", "issues": ["The time row wraps ('07.30–09.00' then '· 90 mnt' on a new line), so some cards are taller than others (e.g. Bahasa Indonesia fits on one line). Cosmetic only."]},
+      {"screen": "Announcement popup", "issues": ["Escape does not close the student announcement popup, but it does close the subject modal. Minor inconsistency, probably pre-existing."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: let Escape close the announcement popup for consistency", "Optional: make the subject card time row the same height on mobile"],
+  "critical_code_review_comments": [
+    "SubjectCardsSection calls subjectStore.upcomingFor() inline for each card on every render. Each call sorts all activities and creates a new Date. This is fine at prototype scale; a computed map keyed by subject would be cleaner.",
+    "upcomingFor uses new Date() but isn't reactive to the date changing. If the page stays open past midnight, filtering uses the date as of the last re-render. Minor."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (no backend)", "frontend": "100% of requested features"},
+  "test_credentials": "student / 123, admin / 123 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "TEST_ activities, descriptions and announcements stored only in Playwright browser localStorage",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified: card header is pastel and the card body is white (rgb(255,255,255)) with a 1px border; icons have naturalWidth 420. Modal closes via X, overlay and Esc. On a fresh store the modal shows the empty states. Landing has 3 feature cards and doesn't auto-open announcements. 13 subjects; default date is the next school day (Saturday counts as a school day). Empty-form and duplicate (case/space-insensitive) errors work. Edit, delete with confirm, localStorage keys and persistence after reload all work. Description save shows the saved message and persists. Student sees Kimia description + Kuis activity and status '1 Kuis'. Past-dated activity is hidden; no-date activity is shown. Matematika shows nothing. Admin routes redirect students to /. No edit controls in the modal. 3 home sections, 6 timeline cards plus the now indicator, 5 nav items, no horizontal overflow at 390 or 1920, modal fits 390x844. Announcement CRUD (add/edit/toggle) works. Use the $router.push navigation trick to avoid 429s."
+}

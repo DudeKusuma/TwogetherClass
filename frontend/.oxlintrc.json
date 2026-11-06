@@ -1,0 +1,9 @@
+{
+  "globals": {
+    "defineProps": "readonly",
+    "defineEmits": "readonly",
+    "defineExpose": "readonly",
+    "defineModel": "readonly",
+    "withDefaults": "readonly"
+  }
+}

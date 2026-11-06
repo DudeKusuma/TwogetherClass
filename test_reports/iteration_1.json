@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only E2E testing of the Together Class Vue 3 SPA (no backend) using Playwright against the public URL. Tested: auth guard redirects for 9 protected routes, redirect-back after login, authenticated user visiting /login, wrong credentials, tc_auth in sessionStorage surviving reload and cleared on logout, public 404, header (logo naturalWidth=1600, XI-B2 label, search, bell, avatar drawer), Admin Power gating (drawer-only for admin, absent for student and on Home, student redirected from /admin-power), announcement CRUD (validation, create active/inactive, edit, toggle, inline delete confirm/cancel, tc_announcements persistence, empty seed), bell badge/panel (active only, empty state), student popup queue (1 dari 3), dismiss persisted in tc_dismissed_announcements across reload, still listed in bell, cleared on logout and shown again on re-login, admin gets no popup. Also tested Home's 3 direct child sections, greeting at 03/06/09:30/12/15:30/16/19/23h via page.clock, day rollover (Mon<16 today, Mon 16:00 Tue, Sat 10 today, Sat 16:30 Mon, Sun Mon), matching subject/timeline order, timeline geometry (left=PAD+min*3.6+2, width=dur*3.6-4, both verified), 2 breaks, now-indicator and is-current/Sekarang badge only while a class is on, auto-scroll on load (scrollLeft 983 at 12:00 on mobile), 'Tidak ada tugas' status, no broken images (13 imgs), 5-item bottom nav with Home raised on mobile and side rail at 1920, placeholders for all 7 routes, no horizontal overflow at 360/390/768/1920 on 4 pages, fixed nav not covering content, no console errors. Every requested feature works. I found only minor issues.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ScheduleTimeline", "issue": "Auto-scroll to now only runs on mount and when entries change. As the clock ticks during a long session (e.g. 03:00 -> 12:00), the scroller stays at scrollLeft 0 and the current class card can sit off-screen.", "selector": "[data-testid=timeline-scroller]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home timeline", "issues": ["On 45-min lesson cards (about 158px wide) both the title and the time are cut off with ellipsis, e.g. 'Bahasa Ind...' and '11.30–12.15 · ...'. Consider a tooltip, a smaller icon, or moving 'mnt' onto its own line."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: in ScheduleTimeline, also call scrollToNow when currentId changes, or every N minutes, so the view follows now during long sessions",
+    "Optional: improve readability of short (45-min) timeline cards",
+    "Optional: listen to the window 'storage' event in useAnnouncementStore so announcements stay in sync across tabs in the same browser"
+  ],
+  "critical_code_review_comments": [
+    "useAnnouncementStore reads localStorage only once, when the store is created, so an admin editing in another tab won't show up until reload. Acceptable for a same-browser prototype.",
+    "In the preview, the Vite dev server serves many unbundled modules through the ingress, and repeated full page reloads hit HTTP 429 rate limits (blank page, lazy routes fail to load). Testing had to use in-app router navigation. A built or preview bundle would avoid this. This is the environment, not an app bug.",
+    "/app/memory/test_credentials.md has no credentials. The credentials student/123 and admin/123 came from the review request; please add them to the file."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (no backend)", "frontend": "100% of requested features pass (minor UX notes only)"},
+  "test_credentials": "student / 123, admin / 123 (memory/test_credentials.md is empty)",
+  "seed_data_creation": "Created TEST_A1..A3 / TEST_INACTIVE announcements inside isolated Playwright browser contexts only. Nothing persisted server-side.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Avoid many page.goto/reload calls: the Vite dev server returns 429 under rapid reloads. Navigate with document.querySelector('#app').__vue_app__.config.globalProperties.$router.push(path). For time tests, call page.clock.install(time=UTC datetime) before goto (browser TZ is UTC), then set_system_time + run_for(31000) to trigger the store's 30s tick."
+}
