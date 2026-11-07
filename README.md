@@ -90,3 +90,19 @@ The QRIS image is expected at `frontend/public/assets/qris-payment.png`. Add the
 Migration `20261107_task_access_and_explore.sql` pernah menambahkan akses agar siswa bisa membuat tugas langsung. Untuk mengembalikan alur persetujuan admin, jalankan migration baru `supabase/migrations/20261108_task_approval_required.sql` satu kali di Supabase SQL Editor setelah migration sebelumnya. Setelah itu, pengajuan tugas baru dari siswa akan masuk ke antrean Admin Power dan baru diterbitkan setelah disetujui. Tugas yang dibuat admin tetap langsung tampil.
 
 Menu Uang Kas dan Iuran Kelas kini tersedia langsung di menu profil. Piket Kelas, Arsip Kelas, serta Student Titles & Badges juga ditampilkan sebagai fitur yang akan datang. Halaman perantara Jelajahi sudah tidak digunakan.
+
+## Community, mini-games, T-Money and PWA update
+
+This project update adds Daily Discovery & Events, Discover Students, four mini-games, a starter Reward Shop with T-Money cosmetics, and PWA installation support. AFK Farming / Dosman Mining Simulator is intentionally not included.
+
+After all previously required migrations have been applied, run this new migration once in Supabase SQL Editor:
+
+`supabase/migrations/20261114_community_games_rewards_pwa.sql`
+
+The migration adds opt-in Discover Students visibility, private/moderated daily responses, aggregate poll results, capped T-Money rewards, server-validated daily game answer rewards, and cosmetic shop purchases. Do not skip earlier migrations. The SQL migration is not applied automatically by Cloudflare Pages.
+
+Daily content templates are in `frontend/src/data/dailyContent.js`. The initial template bank includes 30 announcement templates, 20 daily event prompts, 20 Random Questions, 15 polls and 15 This-or-That prompts. Daily content rotates using the Asia/Makassar date. Existing active announcements and upcoming subject activities are used when available.
+
+The PWA manifest and service worker are included. The service worker caches only the app shell and static assets; personal information and Supabase responses are not cached. Online features still require an internet connection. iPhone/iPad users install through Safari Share → Add to Home Screen.
+
+See `UPDATE_20261114_COMMUNITY_GAMES_REWARDS.md` for the detailed feature list and setup notes.
