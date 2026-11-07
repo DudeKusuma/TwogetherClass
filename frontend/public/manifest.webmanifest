@@ -1,0 +1,14 @@
+{
+  "name": "Twogether Class XI-B2",
+  "short_name": "Twogether Class",
+  "description": "Ruang digital keluarga besar kelas XI-B2.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f8fc",
+  "theme_color": "#1769f5",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

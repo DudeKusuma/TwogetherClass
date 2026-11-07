@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { Megaphone, CalendarClock, BookOpenText, ChevronRight, Wallet, HandCoins, ListTodo, Users } from 'lucide-vue-next'
+import { Megaphone, CalendarClock, BookOpenText, ChevronRight, Wallet, HandCoins, ListTodo, Users, ShieldCheck } from 'lucide-vue-next'
 import { useAnnouncementStore } from '@/stores/useAnnouncementStore'
 import { useSubjectStore } from '@/stores/useSubjectStore'
 
@@ -8,6 +8,7 @@ const announcements = useAnnouncementStore()
 const subjects = useSubjectStore()
 
 const features = [
+  { to: '/admin-power/daily-moderation', id: 'daily-moderation', title: 'Moderasi Daily Responses', desc: 'Tinjau jawaban Random Question sebelum ditampilkan ke kelas.', icon: ShieldCheck, tone: 'mint', stat: () => 'Privasi dan moderasi' },
   { to: '/admin-power/student-accounts', id: 'student-accounts', title: 'Akun Siswa', desc: 'Buat username dan password untuk seluruh siswa XI-B2.', icon: Users, tone: 'mint', stat: () => '43 akun siswa' },
   {
     to: '/admin-power/announcements',

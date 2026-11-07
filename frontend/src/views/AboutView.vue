@@ -14,21 +14,13 @@ import BaseCard from '@/components/base/BaseCard.vue'
       <img :src="logo" alt="Logo Twogether Class" class="about__logo" data-testid="about-logo" />
       <div class="about__text">
         <p>
-          <b>Twogether Class</b> adalah portal kelas digital untuk kelas <b>XI-B2, SMA Negeri 1 Gianyar</b>. Portal ini menjadi
-          ruang bersama bagi siswa dan admin kelas untuk melihat jadwal pelajaran, membaca pengumuman, dan nantinya mengelola
-          tugas, kalender, serta presensi.
-        </p>
-        <p class="about__note">
-          Versi ini adalah prototipe. Data disimpan di browser perangkat yang digunakan dan tidak tersinkron antarperangkat.
+          <b>Twogether Class</b> merupakan website yang dibuat untuk keluarga besar kelas <b>B2 angkatan 62, SMA Negeri 1 Gianyar</b>.
+          Website ini hadir sebagai ruang digital untuk membantu kegiatan kelas, berbagi informasi, serta membangun hubungan yang lebih dekat antarsiswa.
         </p>
       </div>
     </BaseCard>
 
-    <div class="about__tiles">
-      <BaseCard tone="blue"><h2>Jadwal</h2><p>Mata pelajaran dan linimasa jadwal kelas setiap hari sekolah.</p></BaseCard>
-      <BaseCard tone="yellow"><h2>Pengumuman</h2><p>Informasi kelas dari admin langsung di lonceng notifikasi.</p></BaseCard>
-      <BaseCard tone="mint"><h2>Segera hadir</h2><p>Kalender bersama, tugas, dan presensi kelas.</p></BaseCard>
-    </div>
+
   </div>
 </template>
 
