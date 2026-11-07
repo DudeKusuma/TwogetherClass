@@ -1,13 +1,13 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { CalendarDays, ListTodo, House, UserCheck, User } from 'lucide-vue-next'
+import { CalendarDays, ListTodo, House, Compass, User } from 'lucide-vue-next'
 
 // Main navigation: bottom bar on mobile/tablet, side rail on desktop.
 const items = [
   { to: '/schedule', label: 'Jadwal', icon: CalendarDays, id: 'schedule' },
   { to: '/tasks', label: 'Tugas', icon: ListTodo, id: 'tasks' },
   { to: '/', label: 'Home', icon: House, id: 'home', home: true },
-  { to: '/attendance', label: 'Presensi', icon: UserCheck, id: 'attendance' },
+  { to: '/discover', label: 'Discover', icon: Compass, id: 'discover' },
   { to: '/profile', label: 'Profil Saya', icon: User, id: 'profile' }
 ]
 </script>

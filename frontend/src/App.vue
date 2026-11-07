@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
-import AnnouncementPopup from '@/components/announcements/AnnouncementPopup.vue'
 import CalendarPendingAlert from '@/components/calendar/CalendarPendingAlert.vue'
 import { useAuthStore } from '@/stores/useAuthStore'
 
@@ -19,7 +18,6 @@ const showShell = computed(() => auth.isAuthenticated && route.meta.layout !== '
     <main class="app-main" data-testid="app-main">
       <RouterView />
     </main>
-    <AnnouncementPopup />
     <CalendarPendingAlert />
   </div>
   <RouterView v-else />

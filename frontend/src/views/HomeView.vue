@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import GreetingSection from '@/components/home/GreetingSection.vue'
 import SubjectCardsSection from '@/components/home/SubjectCardsSection.vue'
 import ScheduleSection from '@/components/home/ScheduleSection.vue'
+import DailySpotlight from '@/components/home/DailySpotlight.vue'
 import { useScheduleStore } from '@/stores/useScheduleStore'
 
 const schedule = useScheduleStore()
@@ -12,6 +13,7 @@ onMounted(() => schedule.startClock())
 <template>
   <div class="home" data-testid="home-page">
     <GreetingSection />
+    <DailySpotlight />
     <SubjectCardsSection />
     <ScheduleSection />
   </div>

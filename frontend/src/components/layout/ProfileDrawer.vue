@@ -2,8 +2,9 @@
 import { defineProps, defineEmits } from 'vue'
 import { watch, onBeforeUnmount } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { X, User, Info, ShieldCheck, LogOut, ChevronRight, Wallet, HandCoins, Brush, Images, Award } from 'lucide-vue-next'
+import { X, User, Info, ShieldCheck, LogOut, ChevronRight, Wallet, HandCoins, Brush, Images, Award, UserCheck, Gamepad2, ShoppingBag, CalendarDays } from 'lucide-vue-next'
 import BaseButton from '@/components/base/BaseButton.vue'
+import InstallAppCard from '@/components/shared/InstallAppCard.vue'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({ open: { type: Boolean, default: false } })
@@ -69,6 +70,10 @@ function logout() {
             <span class="drawer__link-icon"><User :size="18" /></span> Profil Saya <ChevronRight :size="18" class="chev" />
           </RouterLink>
           <div class="drawer__section-label">Fitur kelas</div>
+          <RouterLink to="/attendance" class="drawer__link" @click="emit('close')"><span class="drawer__link-icon"><UserCheck :size="18" /></span> Presensi <ChevronRight :size="18" class="chev" /></RouterLink>
+          <RouterLink to="/" class="drawer__link" @click="emit('close')"><span class="drawer__link-icon"><CalendarDays :size="18" /></span> Highlight Hari Ini <ChevronRight :size="18" class="chev" /></RouterLink>
+          <RouterLink to="/games" class="drawer__link" @click="emit('close')"><span class="drawer__link-icon"><Gamepad2 :size="18" /></span> Games <ChevronRight :size="18" class="chev" /></RouterLink>
+          <RouterLink to="/shop" class="drawer__link" @click="emit('close')"><span class="drawer__link-icon"><ShoppingBag :size="18" /></span> T-Money & Reward Shop <ChevronRight :size="18" class="chev" /></RouterLink>
           <RouterLink to="/cash" class="drawer__link" data-testid="drawer-cash-link" @click="emit('close')">
             <span class="drawer__link-icon drawer__link-icon--mint"><Wallet :size="18" /></span> Uang Kas <ChevronRight :size="18" class="chev" />
           </RouterLink>
@@ -97,6 +102,8 @@ function logout() {
             <span class="drawer__link-icon drawer__link-icon--admin"><ShieldCheck :size="18" /></span> Admin Power <ChevronRight :size="18" class="chev" />
           </RouterLink>
         </nav>
+
+        <div class="drawer__install"><InstallAppCard /></div>
 
         <div class="drawer__foot">
           <BaseButton variant="danger" block data-testid="drawer-logout-button" @click="logout">
@@ -132,6 +139,10 @@ function logout() {
   gap: var(--space-5);
   overflow-y: auto;
 }
+
+.drawer__install :deep(.install-card) { padding: 12px; }
+.drawer__install :deep(.install-copy strong) { font-size: 12px; }
+.drawer__install :deep(.install-action) { padding: 8px 10px; }
 
 .drawer__head {
   display: flex;

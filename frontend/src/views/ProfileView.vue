@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { UserRound, Save, Heart, Sparkles, LockKeyhole, CheckCircle2 } from 'lucide-vue-next'
+import { UserRound, Save, Heart, Sparkles, LockKeyhole, CheckCircle2, Coins } from 'lucide-vue-next'
 import BaseCard from '@/components/base/BaseCard.vue'
 import PagePlaceholder from '@/components/shared/PagePlaceholder.vue'
 import { supabase } from '@/lib/supabase'
@@ -15,6 +15,8 @@ const fullName = ref('')
 const studentNumber = ref('')
 const attendanceNumber = ref(null)
 const adminOnly = ref(false)
+const cosmetics = ref({})
+const tMoney = ref(null)
 const form = ref({
   short_name: '',
   birth_place: '',
@@ -23,7 +25,8 @@ const form = ref({
   address: '',
   hobbies: [],
   about_me: [],
-  show_student_number: false
+  show_student_number: false,
+  discover_opt_in: false
 })
 
 const hobbyOptions = [
@@ -49,6 +52,12 @@ async function loadProfile() {
   loading.value = true
   error.value = ''
   adminOnly.value = false
+  const [cosmeticResult, walletResult] = await Promise.all([
+    supabase.from('student_cosmetics').select('profile_color,name_color,title_color').eq('profile_id', auth.user.id).maybeSingle(),
+    supabase.rpc('get_my_t_money')
+  ])
+  cosmetics.value = cosmeticResult.data || {}
+  tMoney.value = walletResult.error ? null : (walletResult.data?.balance ?? 0)
   const { data, error: requestError } = await supabase.rpc('get_student_profile', {
     target_profile_id: auth.user.id
   })
@@ -71,7 +80,8 @@ async function loadProfile() {
       address: data.address || '',
       hobbies: Array.isArray(data.hobbies) ? data.hobbies : [],
       about_me: Array.isArray(data.about_me) ? data.about_me : [],
-      show_student_number: data.show_student_number === true
+      show_student_number: data.show_student_number === true,
+      discover_opt_in: data.discover_opt_in === true
     }
   }
   loading.value = false
@@ -99,6 +109,7 @@ async function saveProfile() {
     hobbies: form.value.hobbies,
     about_me: form.value.about_me,
     show_student_number: form.value.show_student_number,
+    discover_opt_in: form.value.discover_opt_in,
     updated_at: new Date().toISOString()
   }
   const { error: saveError } = await supabase
@@ -123,12 +134,13 @@ onMounted(loadProfile)
   <PagePlaceholder eyebrow="Profil Saya" title="Profil Saya" :icon="UserRound" tone="lavender" test-id="profile-page">
     <div class="profile-page-content">
       <BaseCard class="profile-identity" data-testid="profile-user-card">
-        <span class="profile-avatar">{{ initial }}</span>
+        <span class="profile-avatar" :style="cosmetics.profile_color ? { background: cosmetics.profile_color, color: '#3b4658' } : {}">{{ initial }}</span>
         <div class="profile-identity__text">
-          <h2 data-testid="profile-display-name">{{ form.short_name || auth.user?.displayName || 'Profil Siswa' }}</h2>
-          <p>{{ auth.roleLabel }} · XI-B2 · SMA Negeri 1 Gianyar</p>
+          <h2 data-testid="profile-display-name" :style="cosmetics.name_color ? { color: cosmetics.name_color } : {}">{{ form.short_name || auth.user?.displayName || 'Profil Siswa' }}</h2>
+          <p :style="cosmetics.title_color ? { color: cosmetics.title_color } : {}">{{ auth.roleLabel }} · XI-B2 · SMA Negeri 1 Gianyar</p>
           <small>Avatar menggunakan inisial nama. Foto profil belum digunakan.</small>
         </div>
+        <div class="profile-wallet"><span><Coins :size="17" /> T-Money</span><strong>{{ tMoney === null ? 'Belum tersedia' : tMoney.toLocaleString('id-ID') }}</strong></div>
       </BaseCard>
 
       <p v-if="error" class="profile-message profile-message--error" role="alert">{{ error }}</p>
@@ -200,6 +212,10 @@ onMounted(loadProfile)
             <input v-model="form.show_student_number" type="checkbox"/>
           </label>
           <p class="section-note">Admin kelas tetap dapat melihat NISN meskipun pengaturan ini dimatikan.</p>
+          <label class="privacy-toggle">
+            <span><b>Izinkan profil tampil di Discover Students</b><small>Nama panggilan, hobi, dan pilihan About Me dapat dilihat teman sekelas. Isi Short name agar profilmu muncul. Data sensitif seperti alamat, tanggal lahir, dan NIS tidak ditampilkan.</small></span>
+            <input v-model="form.discover_opt_in" type="checkbox"/>
+          </label>
         </BaseCard>
 
         <button class="profile-save" type="button" :disabled="saving" @click="saveProfile">
@@ -214,7 +230,8 @@ onMounted(loadProfile)
 .profile-page-content{display:grid;gap:14px}
 .profile-identity{display:flex;align-items:center;gap:14px}
 .profile-avatar{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;background:var(--c-primary);color:white;font-size:25px;font-weight:850}
-.profile-identity__text{min-width:0}
+.profile-identity__text{min-width:0;flex:1}
+.profile-wallet{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:#f6f2ff;color:#7655b5;min-width:145px}.profile-wallet span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800}.profile-wallet strong{font-size:17px;font-weight:900}
 .profile-identity__text h2{font-size:18px;font-weight:850}
 .profile-identity__text p{font-size:12px;color:var(--c-text-muted);margin-top:4px}
 .profile-identity__text small{font-size:10px;color:var(--c-text-soft);display:block;margin-top:5px}
@@ -245,5 +262,5 @@ onMounted(loadProfile)
 .profile-message--error{background:#fff0f0;color:#b42b36}
 .profile-message--success{background:#e9f9ef;color:#167b48}
 .profile-loading{padding:30px;text-align:center;color:var(--c-text-muted);font-size:12px}
-@media(max-width:520px){.readonly-grid,.profile-fields{grid-template-columns:1fr}.field-full{grid-column:auto}}
+@media(max-width:520px){.readonly-grid,.profile-fields{grid-template-columns:1fr}.field-full{grid-column:auto}.profile-identity{flex-wrap:wrap}.profile-wallet{width:100%}}
 </style>
